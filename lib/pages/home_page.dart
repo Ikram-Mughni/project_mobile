@@ -16,77 +16,101 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.blue,
         centerTitle: true,
       ),
-      body: ListView.builder(
+      body: GridView.builder(
         padding: const EdgeInsets.all(8.0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+          childAspectRatio: 0.75,
+        ),
         itemCount: itemList.length,
         itemBuilder: (context, index) {
           ItemModel item = itemList[index];
-          return _buildItemCard(context, item);
+          return _buildGridItem(context, item);
         },
       ),
     );
   }
 
-  // Helper function untuk merender item card (Modularisasi UI)
-  Widget _buildItemCard(BuildContext context, ItemModel item) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(8.0),
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(6.0),
-          child: Image.network(
-            item.imageUrl,
-            width: 60,
-            height: 60,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: 60,
-                height: 60,
-                color: Colors.grey[300],
-                child: const Icon(Icons.image, color: Colors.grey),
-              );
-            },
+  // Helper function untuk merender item dalam bentuk Grid (Modularisasi UI)
+  Widget _buildGridItem(BuildContext context, ItemModel item) {
+    return GestureDetector(
+      onTap: () {
+        // Navigasi ke DetailPage dengan mengirimkan object item (Passing Data)
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(item: item),
           ),
+        );
+      },
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
-        title: Text(
-          item.title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        subtitle: Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 4),
-            Text(
-              item.subtitle,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(8.0),
+                ),
+                child: Image.network(
+                  item.imageUrl,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: const Center(
+                        child: Icon(Icons.image, size: 40, color: Colors.grey),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              'Rp ${item.price}',
-              style: const TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Rp ${item.price}',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
-        onTap: () {
-          // Navigasi ke DetailPage dengan mengirimkan object item (Passing Data)
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailPage(item: item),
-            ),
-          );
-        },
       ),
     );
   }
