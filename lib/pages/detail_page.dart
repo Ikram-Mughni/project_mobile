@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'bookModels.dart';
+import '../models/dummy_data.dart';
 
-class BookDetailPage extends StatelessWidget {
-  final BookModel book;
+class DetailPage extends StatelessWidget {
+  final ItemModel item;
 
-  const BookDetailPage({super.key, required this.book});
+  const DetailPage({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(book.title),
+        title: Text(item.title),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
@@ -20,20 +20,15 @@ class BookDetailPage extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                height: 280,
+                height: 250,
                 width: double.infinity,
                 color: Colors.grey[100],
-                padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Image.network(
-                  book.imageUrl,
+                  item.imageUrl,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return const Center(
-                      child: Icon(
-                        Icons.book,
-                        size: 100,
-                        color: Colors.grey,
-                      ),
+                      child: Icon(Icons.image, size: 80, color: Colors.grey),
                     );
                   },
                 ),
@@ -45,49 +40,35 @@ class BookDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    book.title,
+                    item.title,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
-                    'Penulis: ${book.author}',
+                    item.subtitle,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      fontSize: 14,
+                      color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 20),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${book.rating}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      const Icon(Icons.menu_book, color: Colors.blue, size: 20),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${book.pages} Halaman',
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
+                  Text(
+                    'Rp ${item.price}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
                   ),
                   const Divider(height: 24, thickness: 1),
-                  _buildDetailRow('Tahun Terbit', '${book.year}'),
-                  _buildDetailRow('Genre', book.genre),
-                  _buildDetailRow('Penerbit', book.publisher),
+                  _buildDetailRow('ID Item', '#${item.id}'),
+                  _buildDetailRow('Kategori', item.subtitle),
                   const Divider(height: 24, thickness: 1),
                   const Text(
-                    'Deskripsi / Sinopsis:',
+                    'Deskripsi Lengkap:',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -95,7 +76,7 @@ class BookDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    book.description,
+                    item.description,
                     style: const TextStyle(
                       fontSize: 14,
                       height: 1.5,
@@ -111,6 +92,7 @@ class BookDetailPage extends StatelessWidget {
     );
   }
 
+  // Helper function untuk merender baris detail (Modularisasi UI)
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -118,7 +100,7 @@ class BookDetailPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 110,
+            width: 100,
             child: Text(
               label,
               style: const TextStyle(

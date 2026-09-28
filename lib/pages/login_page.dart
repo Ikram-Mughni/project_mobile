@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'library_page.dart';
+import '../models/dummy_data.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,30 +10,33 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoginFailed = false;
 
-  void _login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  void _handleLogin() {
+    String usernameInput = _usernameController.text;
+    String passwordInput = _passwordController.text;
 
-    // Data login akun dummy
-    if ((email == "admin@gmail.com" || email == "admin") && password == "admin123") {
+    // Validasi data login dengan dummyUser
+    if (usernameInput == dummyUser.username &&
+        passwordInput == dummyUser.password) {
       setState(() {
         isLoginFailed = false;
       });
+      // Pindah ke HomePage dan hapus stack login (pushReplacement)
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LibraryPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } else {
       setState(() {
         isLoginFailed = true;
       });
+      // Tampilkan error pesan gagal via SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Login Gagal: Email atau Password tidak sesuai'),
+          content: Text('Login Gagal: Username atau Password salah!'),
           backgroundColor: Colors.red,
         ),
       );
@@ -44,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Halaman Login',
+          'Login Page',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
@@ -57,37 +61,26 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.menu_book_rounded,
+                Icons.lock_person_rounded,
                 size: 80,
                 color: Colors.blue,
               ),
               const SizedBox(height: 16),
               const Text(
-                'Perpustakaan Buku',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                'Selamat Datang',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Masuk dengan email dan password dummy',
+                'Silakan login untuk melanjutkan',
                 style: TextStyle(color: Colors.grey),
               ),
               const SizedBox(height: 24),
-              _emailField(),
+              _buildUsernameField(),
               const SizedBox(height: 16),
-              _passwordField(),
+              _buildPasswordField(),
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 45),
-                ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
+              _buildLoginButton(),
             ],
           ),
         ),
@@ -95,12 +88,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _emailField() {
+  // Helper function untuk input username (Modularisasi UI)
+  Widget _buildUsernameField() {
     return TextField(
-      controller: _emailController,
+      controller: _usernameController,
       decoration: InputDecoration(
-        hintText: 'Email',
-        prefixIcon: const Icon(Icons.email),
+        hintText: 'Username',
+        prefixIcon: const Icon(Icons.person),
         contentPadding: const EdgeInsets.all(12.0),
         border: OutlineInputBorder(
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
@@ -126,7 +120,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _passwordField() {
+  // Helper function untuk input password (Modularisasi UI)
+  Widget _buildPasswordField() {
     return TextField(
       controller: _passwordController,
       obscureText: true,
@@ -154,6 +149,22 @@ class _LoginPageState extends State<LoginPage> {
             width: 2.0,
           ),
         ),
+      ),
+    );
+  }
+
+  // Helper function untuk tombol login (Modularisasi UI)
+  Widget _buildLoginButton() {
+    return ElevatedButton(
+      onPressed: _handleLogin,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        minimumSize: const Size(double.infinity, 45),
+      ),
+      child: const Text(
+        'Login',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
