@@ -10,36 +10,38 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // GlobalKey untuk menangani validasi Form
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // TextEditingController untuk mengontrol input username dan password
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool isLoginFailed = false;
 
+  // Method untuk memproses autentikasi form login
   void _handleLogin() {
-    String usernameInput = _usernameController.text;
-    String passwordInput = _passwordController.text;
+    // 1. Jalankan fungsi validasi seluruh field di Form
+    if (_formKey.currentState!.validate()) {
+      String usernameInput = _usernameController.text;
+      String passwordInput = _passwordController.text;
 
-    // Validasi data login dengan dummyUser
-    if (usernameInput == dummyUser.username &&
-        passwordInput == dummyUser.password) {
-      setState(() {
-        isLoginFailed = false;
-      });
-      // Pindah ke HomePage dan hapus stack login (pushReplacement)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } else {
-      setState(() {
-        isLoginFailed = true;
-      });
-      // Tampilkan error pesan gagal via SnackBar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login Gagal: Username atau Password salah!'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      // 2. Autentikasi statis mencocokkan kredensial di dummyUser ('admin' & 'admin')
+      if (usernameInput == dummyUser.username &&
+          passwordInput == dummyUser.password) {
+        // Navigasi ke HomePage menggunakan pushReplacement
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      } else {
+        // Tampilkan SnackBar error jika username/password tidak cocok
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login Gagal: Username atau Password salah!'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -48,122 +50,110 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Login Page',
+          'StayVibes Login',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
         centerTitle: true,
       ),
+      // SingleChildScrollView mencegah overflow saat keyboard HP muncul
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.lock_person_rounded,
-                size: 80,
-                color: Colors.blue,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Selamat Datang',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Silakan login untuk melanjutkan',
-                style: TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-              _buildUsernameField(),
-              const SizedBox(height: 16),
-              _buildPasswordField(),
-              const SizedBox(height: 24),
-              _buildLoginButton(),
-            ],
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.hotel_class_rounded,
+                  size: 90,
+                  color: Colors.blue,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'StayVibes Resort',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Silakan login untuk merencanakan liburanmu',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 28),
+                _buildUsernameFormField(),
+                const SizedBox(height: 16),
+                _buildPasswordFormField(),
+                const SizedBox(height: 24),
+                _buildSubmitButton(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Helper function untuk input username (Modularisasi UI)
-  Widget _buildUsernameField() {
-    return TextField(
+  // Helper function untuk merender TextFormField Username
+  Widget _buildUsernameFormField() {
+    return TextFormField(
       controller: _usernameController,
-      decoration: InputDecoration(
-        hintText: 'Username',
-        prefixIcon: const Icon(Icons.person),
-        contentPadding: const EdgeInsets.all(12.0),
+      decoration: const InputDecoration(
+        labelText: 'Username',
+        hintText: 'Masukkan username admin',
+        prefixIcon: Icon(Icons.person),
         border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          borderSide: BorderSide(
-            color: isLoginFailed ? Colors.red : Colors.blue,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          borderSide: BorderSide(
-            color: isLoginFailed ? Colors.red : Colors.grey,
-            width: 1.5,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          borderSide: BorderSide(
-            color: isLoginFailed ? Colors.red : Colors.blue,
-            width: 2.0,
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Username tidak boleh kosong!';
+        }
+        return null;
+      },
     );
   }
 
-  // Helper function untuk input password (Modularisasi UI)
-  Widget _buildPasswordField() {
-    return TextField(
+  // Helper function untuk merender TextFormField Password
+  Widget _buildPasswordFormField() {
+    return TextFormField(
       controller: _passwordController,
       obscureText: true,
-      decoration: InputDecoration(
-        hintText: 'Password',
-        prefixIcon: const Icon(Icons.lock),
-        contentPadding: const EdgeInsets.all(12.0),
+      decoration: const InputDecoration(
+        labelText: 'Password',
+        hintText: 'Masukkan password admin',
+        prefixIcon: Icon(Icons.lock),
         border: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          borderSide: BorderSide(
-            color: isLoginFailed ? Colors.red : Colors.blue,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          borderSide: BorderSide(
-            color: isLoginFailed ? Colors.red : Colors.grey,
-            width: 1.5,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-          borderSide: BorderSide(
-            color: isLoginFailed ? Colors.red : Colors.blue,
-            width: 2.0,
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password tidak boleh kosong!';
+        }
+        if (value.length < 4) {
+          return 'Password minimal 4 karakter!';
+        }
+        return null;
+      },
     );
   }
 
-  // Helper function untuk tombol login (Modularisasi UI)
-  Widget _buildLoginButton() {
+  // Helper function untuk merender Tombol Submit Login
+  Widget _buildSubmitButton() {
     return ElevatedButton(
       onPressed: _handleLogin,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 45),
+        minimumSize: const Size(double.infinity, 48),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
       ),
       child: const Text(
-        'Login',
+        'Login Sekarang',
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
