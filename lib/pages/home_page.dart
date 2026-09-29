@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/dummy_data.dart';
+import 'color_changer_page.dart';
 import 'detail_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,6 +21,21 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: Colors.blue,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.palette, color: Colors.white),
+            tooltip: 'Fitur Ubah Warna',
+            onPressed: () {
+              // Navigasi ke Halaman Ubah Warna
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ColorChangerPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(8.0),
