@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/dummy_data.dart';
 
 class DetailPage extends StatelessWidget {
-  final ItemModel item;
+  final DestinationModel item;
 
   const DetailPage({super.key, required this.item});
 
@@ -10,7 +10,7 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(item.title),
+        title: Text(item.name),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
@@ -40,7 +40,7 @@ class DetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.title,
+                    item.name,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -48,24 +48,46 @@ class DetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    item.subtitle,
+                    item.category,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Text(
-                    'Rp ${item.price}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Rp ${item.ticketPrice}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 20),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${item.rating} / 5.0',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   const Divider(height: 24, thickness: 1),
                   _buildDetailRow('ID Item', '#${item.id}'),
-                  _buildDetailRow('Kategori', item.subtitle),
+                  _buildDetailRow('Kategori', item.category),
+                  _buildDetailRow('Lokasi', item.location),
+                  _buildDetailRow('Harga Tiket', 'Rp ${item.ticketPrice}'),
+                  _buildDetailRow('Rating', '${item.rating} / 5.0'),
+                  _buildDetailRow('Jam Buka', item.openHours),
                   const Divider(height: 24, thickness: 1),
                   const Text(
                     'Deskripsi Lengkap:',
