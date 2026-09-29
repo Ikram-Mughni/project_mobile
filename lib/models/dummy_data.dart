@@ -1,7 +1,17 @@
+// ============================================================================
+// MODEL & DUMMY DATA - APLIKASI RENTAL MOBIL IMPIAN ("DriveRent")
+// ============================================================================
+// File ini berfungsi sebagai pusat penyediaan data statis (Dummy Data) dan 
+// definisi struktur data (Class Model) untuk simulasi Kuis Praktikum Mobile.
+// ============================================================================
+
+/// [UserModel]
+/// Model data untuk menampung informasi kredensial login pengguna.
+/// Digunakan pada proses autentikasi statis di LoginPage.
 class UserModel {
-  final String username;
-  final String password;
-  final String fullName;
+  final String username; // Username untuk verifikasi login
+  final String password; // Password untuk verifikasi login
+  final String fullName; // Nama lengkap user yang akan dipassing ke HomePage / ProfilePage
 
   UserModel({
     required this.username,
@@ -10,102 +20,125 @@ class UserModel {
   });
 }
 
-// Kredensial Dummy untuk Validasi Login
+/// [dummyUser]
+/// Kredensial Pengguna Statis (Single Source of Truth untuk Login)
+/// Gunakan username 'pengemudi' dan password 'sewamobil123' untuk masuk ke aplikasi.
 UserModel dummyUser = UserModel(
   username: "admin",
   password: "admin",
-  fullName: "Nusantara Explorer",
+  fullName: "Budi Pengendara",
 );
 
-class DestinationModel {
-  final int id;
-  final String name;
-  final String category;
-  final String location;
-  final int ticketPrice;
-  final double rating;
-  final String openHours;
-  final String description;
-  final String imageUrl;
+/// [CarModel]
+/// Model data utama yang merepresentasikan objek armada mobil rental.
+/// Memiliki beragam tipe data (int, String, double, bool) untuk memenuhi standar Kuis Modul 1-4.
+class CarModel {
+  final int id;                   // [int] Identifier unik untuk tiap item mobil
+  final String brand;            // [String] Merk pabrikan mobil (misal: Toyota, Honda, Hyundai)
+  final String modelName;        // [String] Nama seri / tipe mobil (misal: Civic RS, Fortuner VRZ)
+  final String type;             // [String] Kategori jenis bodi (misal: Sedan, SUV, Electric, MPV)
+  final int rentalPricePerDay;   // [int] Biaya sewa mobil per hari dalam Rupiah (IDR)
+  final double rating;           // [double] Rating ulasan kepuasan pelanggan (Skala 1.0 - 5.0)
+  final String transmission;     // [String] Tipe transmisi kendaraan (Otomatis / Manual)
+  final int capacity;            // [int] Kapasitas maksimum jumlah penumpang (Orang)
+  final String description;      // [String] Deskripsi rinci fitur, spesifikasi, dan keunggulan mobil
+  final String imageUrl;         // [String] URL tautan gambar mobil dari Unsplash / CDN
+  final bool isAvailable;        // [bool] Status ketersediaan mobil untuk disewa (Tersedia / Dipesan)
+  bool isFavorite;               // [bool] Status favorit/like mobil (Dapat diubah via setState)
 
-  DestinationModel({
+  CarModel({
     required this.id,
-    required this.name,
-    required this.category,
-    required this.location,
-    required this.ticketPrice,
+    required this.brand,
+    required this.modelName,
+    required this.type,
+    required this.rentalPricePerDay,
     required this.rating,
-    required this.openHours,
+    required this.transmission,
+    required this.capacity,
     required this.description,
     required this.imageUrl,
+    required this.isAvailable,
+    this.isFavorite = false,
   });
 }
 
-// List Data Dummy Destinasi Wisata
-List<DestinationModel> destinationList = [
-  DestinationModel(
+/// [carList]
+/// Daftar koleksi produk armada mobil rental yang akan ditayangkan di HomePage (ListView / GridView).
+/// Berisi 5 pasang objek mobil dengan atribut bervariasi.
+List<CarModel> carList = [
+  CarModel(
     id: 1,
-    name: "Candi Borobudur",
-    category: "Wisata Sejarah",
-    location: "Magelang, Jawa Tengah",
-    ticketPrice: 50000,
-    rating: 4.8,
-    openHours: "06:30 - 17:00 WIB",
-    description:
-        "Candi Borobudur adalah candi Buddha terbesar di dunia yang dibangun pada abad ke-9. Destinasi wisata sejarah ini terkenal dengan arsitektur megalitikum yang megah dan pemandangan matahari terbit yang sangat memukau.",
-    imageUrl:
-        "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=500",
-  ),
-  DestinationModel(
-    id: 2,
-    name: "Raja Ampat",
-    category: "Wisata Bahari",
-    location: "Papua Barat Daya",
-    ticketPrice: 500000,
+    brand: "Honda",
+    modelName: "Civic RS Turbo",
+    type: "Sedan Premium",
+    rentalPricePerDay: 1200000,
     rating: 4.9,
-    openHours: "24 Jam",
+    transmission: "Otomatis CVT",
+    capacity: 5,
     description:
-        "Kepulauan Raja Ampat menawarkan pemandangan pulau karst gugusan Wayag dan keanekaragaman hayati bawah laut terkaya di dunia. Tempat ini merupakan surga bagi para penyelam dan pecinta alam bebas.",
+        "Honda Civic RS menawarkan desain sporty yang memikat dengan mesin 1.5L VTEC Turbo bertenaga tinggi. Dilengkapi dengan teknologi Honda SENSING, interior kulit mewah, dan paddle shift untuk pengalaman mengemudi yang sangat responsif.",
     imageUrl:
-        "https://images.unsplash.com/photo-1516690561799-46d8f74df9ab?w=500",
+        "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?w=600",
+    isAvailable: true,
   ),
-  DestinationModel(
-    id: 3,
-    name: "Gunung Bromo",
-    category: "Wisata Alam",
-    location: "Probolinggo, Jawa Timur",
-    ticketPrice: 35000,
-    rating: 4.7,
-    openHours: "24 Jam",
-    description:
-        "Gunung Bromo terkenal dengan pemandangan lautan pasir yang luas, kawah aktif yang menakjubkan, serta keindahan sunrise dari Puncak Penanjakan yang sangat fenomenal di kalangan wisatawan.",
-    imageUrl:
-        "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=500",
-  ),
-  DestinationModel(
-    id: 4,
-    name: "Taman Nasional Komodo",
-    category: "Cagar Alam",
-    location: "Nusa Tenggara Timur",
-    ticketPrice: 150000,
+  CarModel(
+    id: 2,
+    brand: "Hyundai",
+    modelName: "Ioniq 5 Signature",
+    type: "Electric Vehicle (EV)",
+    rentalPricePerDay: 1500000,
     rating: 4.8,
-    openHours: "07:00 - 16:00 WITA",
+    transmission: "Otomatis Single Speed",
+    capacity: 5,
     description:
-        "Habitat asli dari hewan purba Komodo yang merupakan kadal terbesar di bumi. Selain keanekaragaman satwa, kawasan ini juga terkenal dengan Pantai Merah Muda (Pink Beach) yang sangat langka.",
+        "Mobil listrik futuristik dengan kemampuan pengisian daya super cepat Ultra-Fast Charging. Menawarkan ruang kabin yang sangat luas, panoramic sunroof, serta fitur Vehicle-to-Load (V2L) untuk mensuplai daya listrik ke perangkat outdoor.",
     imageUrl:
-        "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=500",
+        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600",
+    isAvailable: true,
   ),
-  DestinationModel(
-    id: 5,
-    name: "Danau Toba",
-    category: "Wisata Alam",
-    location: "Sumatera Utara",
-    ticketPrice: 20000,
-    rating: 4.6,
-    openHours: "24 Jam",
+  CarModel(
+    id: 3,
+    brand: "Toyota",
+    modelName: "Fortuner VRZ GR Sport",
+    type: "SUV Gagah",
+    rentalPricePerDay: 1350000,
+    rating: 4.7,
+    transmission: "Otomatis 6-Speed",
+    capacity: 7,
     description:
-        "Danau vulkanik terbesar di dunia yang terbentuk akibat letusan supervolcano puluhan ribu tahun lalu. Di tengah danau ini terdapat Pulau Samosir yang kaya akan budaya suku Batak yang unik.",
+        "SUV 7-seater tangguh yang siap menerjang segala medan. Dibekali mesin diesel 2.8L berkekuatan besar, sistem penggerak roda yang stabil, serta interior bernuansa GR Sport yang elegan dan siap menemani perjalanan jarak jauh bersama keluarga.",
     imageUrl:
-        "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=500",
+        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600",
+    isAvailable: false,
+  ),
+  CarModel(
+    id: 4,
+    brand: "BMW",
+    modelName: "330i M Sport",
+    type: "Luxury Sedan",
+    rentalPricePerDay: 2500000,
+    rating: 5.0,
+    transmission: "Otomatis Steptronic",
+    capacity: 5,
+    description:
+        "Sedan mewah khas Jerman yang menggabungkan performa mesin TwinPower Turbo dengan handling yang presisi. Fitur komplit meliputi Harman Kardon Surround Sound System, Live Cockpit Professional, dan balutan kulit Vernasca yang sangat eksklusif.",
+    imageUrl:
+        "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600",
+    isAvailable: true,
+  ),
+  CarModel(
+    id: 5,
+    brand: "Mitsubishi",
+    modelName: "Xpander Ultimate",
+    type: "MPV Keluarga",
+    rentalPricePerDay: 600000,
+    rating: 4.6,
+    transmission: "Otomatis CVT",
+    capacity: 7,
+    description:
+        "Mobil keluarga paling populer dengan suspensi halus dan kabin yang sangat senyap. Dilengkapi ground clearance tinggi, banyak tempat penyimpanan, port charger di setiap baris, serta efisiensi bahan bakar yang luar biasa hemat.",
+    imageUrl:
+        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600",
+    isAvailable: true,
   ),
 ];
